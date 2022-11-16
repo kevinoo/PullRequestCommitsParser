@@ -1,0 +1,108 @@
+<!--suppress HtmlFormInputWithoutLabel -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<title> GitHub PR Commits Parser - Options </title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+	<style>
+        #prefix_to_ignore {
+            height: 10rem;
+        }
+	</style>
+
+</head>
+<body>
+
+	<div class="container-fluid">
+
+		<div class="row">
+			<div class="col">
+				<h1> GitHub PR Commits Parser - Options </h1>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-12 col-sm-8 col-lg-6">
+				<h3> Pull Request title </h3>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-12 col-sm-8 col-lg-6">
+
+				<table id="pull_request_title_table" class="table table-stripped">
+					<thead>
+						<tr>
+							<th> From branch </th>
+							<th> to branch </th>
+							<th> Title </th>
+							<th> &nbsp; </th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+					<tfoot>
+						<tr>
+							<td colspan="4" class="text-end">
+								<button id="btn_add_pr_table_row" class="btn btn-sm btn-primary">
+									Add row
+								</button>
+							</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+		</div>
+
+		<hr />
+
+		<div class="row">
+			<div class="col-12 col-sm-8 col-lg-6">
+				<h3> Ignore commits starting with... </h3>
+				<label for="prefix_to_ignore">
+					 One of these strings
+				</label>
+				<textarea class="form-control" id="prefix_to_ignore" data-info="prefix_to_ignore"></textarea>
+			</div>
+		</div>
+
+		<div class="row mt-3 mb-5">
+			<div class="col-12 col-sm-8 col-lg-6">
+				<button id="btn_save" class="btn btn-success">Save</button>
+			</div>
+		</div>
+
+	</div>
+
+	<table class="d-none">
+		<tbody data-template="pull_request_title_row">
+			<tr>
+				<td>
+					<input type="text" class="form-control" data-info="pull_request_title/%INDEX%/from">
+				</td>
+				<td>
+					<input type="text" class="form-control" data-info="pull_request_title/%INDEX%/to">
+				</td>
+				<td>
+					<input type="text" class="form-control" data-info="pull_request_title/%INDEX%/title">
+				</td>
+				<td>
+					<button class="btn btn-sm btn-danger btn_remove_row"> X </button>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<script type="text/javascript" src="../jquery-3.6.1.min.js"></script>
+	<script type="text/javascript" src="jquery.sake.js"></script>
+	<script type="text/javascript" src="../parser.js"></script>
+	<script type="text/javascript" src="options.js"></script>
+
+</body>
+</html>
