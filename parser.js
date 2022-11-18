@@ -216,10 +216,8 @@ const ScriptGitHub = {
 			],
 			'pull_request_title': {
 				// Placeholders: [BRANCH_SOURCE], [BRANCH_DESTINATION]
-				'0': {'from': 'main|master', 'to': 'develop', 'title': '[BRANCH_DESTINATION] branch update'},
-				'1': {'from': 'develop', 'to': 'main|master', 'title': 'Merge [BRANCH_DESTINATION] branch into Develop'},
-				'2': {'from': 'hotfix', 'to': 'main|master', 'title': 'Merge hotfix into [BRANCH_DESTINATION]'},
-				'3': {'from': '.+', 'to': '.+', 'title': 'Merge "[BRANCH_SOURCE]" branch into [BRANCH_DESTINATION]'},
+				'0': {'from': 'hotfix(.+)', 'to': '.+', 'title': 'Merge hotfix into [BRANCH_DESTINATION]'},
+				'1': {'from': '.+', 'to': '.+', 'title': 'Merge "[BRANCH_SOURCE]" branch into [BRANCH_DESTINATION]'},
 			}
 		},
 	},
