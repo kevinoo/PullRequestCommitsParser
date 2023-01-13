@@ -206,7 +206,7 @@ const ScriptGitHub = {
 
 	'vars': {
 		// Actual version of extension
-		'VERSION': 310,
+		'VERSION': 321,
 
 		'defaults': {
 			'prefix_to_ignore': [

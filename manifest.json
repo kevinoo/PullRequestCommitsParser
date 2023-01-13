@@ -3,7 +3,7 @@
 
 	"name": "Pull Request Commits Parser",
 	"description": "Allows you to have the commits list of a Pull Request always organized, tidy, clean and also eliminates double identical commits",
-	"version": "3.2.0",
+	"version": "3.2.1",
 	"author": "Kevin Lucich",
 
 	"browser_specific_settings": {
