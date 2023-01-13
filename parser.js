@@ -3,7 +3,9 @@ const PlatformSettings = {
 
 	'default': {
 		'getSectionKey': function( commit_message ){
-			commit_message = commit_message.toLowerCase();
+
+			// Text to lower case and remove possibility tkt reference "[TKT-###]"
+			commit_message = commit_message.toLowerCase().replace(/\[?[\w-]+]? ?/,'');
 
 			// add || added || create
 			if( commit_message.startsWith('add') || commit_message.startsWith('create') ){
