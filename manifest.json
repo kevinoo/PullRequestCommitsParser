@@ -31,7 +31,7 @@
 			"*://bitbucket.org/*",
 			"*://www.bitbucket.org/*"
 		],
-		"js": ["jquery-3.6.1.min.js","parser.js"],
+		"js": ["jquery-3.6.3.min.js","parser.js"],
 		"run_at": "document_end"
 	}],
 
