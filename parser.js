@@ -5,20 +5,16 @@ const PlatformSettings = {
 		'getSectionKey': function( commit_message ){
 
 			// Text to lower case and remove possibility tkt reference "[TKT-###]"
-			commit_message = commit_message.toLowerCase().replace(/\[?[\w-]+]? ?/,'');
+			commit_message = commit_message.toLowerCase().replace(/\[[\w-]+\] ?/,'');
 
-			// add || added || create
-			if( commit_message.startsWith('add') || commit_message.startsWith('create') ){
-				return 'added';
-			}
-
-			if( commit_message.startsWith('deprecated') ){
-				return 'deprecated';
-			}
-
-			// remove || removed
-			if( commit_message.startsWith('remove') || commit_message.startsWith('delete') ){
-				return 'removed';
+			for (const [key, item] of Object.entries(this.pull_request_groups)) {
+				if( (item.group_name !== '') ){
+					for( let word_to_search of item.words){
+						if( commit_message.startsWith(word_to_search) || (new RegExp(word_to_search,'i')).test(commit_message) ){
+							return item.group_name;
+						}
+					}
+				}
 			}
 
 			return 'fixed';
@@ -206,7 +202,7 @@ const ScriptGitHub = {
 
 	'vars': {
 		// Actual version of extension
-		'VERSION': 321,
+		'VERSION': 340,
 
 		'defaults': {
 			'prefix_to_ignore': [
@@ -220,6 +216,12 @@ const ScriptGitHub = {
 				// Placeholders: [BRANCH_SOURCE], [BRANCH_DESTINATION]
 				'0': {'from': 'hotfix(.+)', 'to': '.+', 'title': 'Merge hotfix into [BRANCH_DESTINATION]'},
 				'1': {'from': '.+', 'to': '.+', 'title': 'Merge "[BRANCH_SOURCE]" branch into [BRANCH_DESTINATION]'},
+			},
+			'pull_request_groups': {
+				'0': {'group_name': 'added', 'words': ['add','create'] },
+				'1': {'group_name': 'deprecated', 'words': ['deprecated'] },
+				'2': {'group_name': 'removed', 'words': ['remove','delete','dismiss'] },
+				'3': {'group_name': 'fixed', 'words': ['.+'] },
 			}
 		},
 	},
@@ -291,12 +293,12 @@ const ScriptGitHub = {
 			}
 		});
 
-		let commits_results = {
-			'added': {},
-			'fixed': {},
-			'removed': {},
-			'deprecated': {},
-		};
+		let commits_results = {};
+		for( const [key, item] of Object.entries(PlatformObject.pull_request_groups) ){
+			if( (item.group_name !== '') ){
+				commits_results[item.group_name] = {};
+			}
+		}
 
 		for(let c in actual_commits){
 			let commit_message = actual_commits[c];
@@ -306,6 +308,9 @@ const ScriptGitHub = {
 			}
 
 			let key = PlatformObject.getSectionKey(commit_message);
+			if( typeof commits_results[key] === 'undefined' ){
+				commits_results[key] = {};
+			}
 			commits_results[key][ commit_message ] = ScriptGitHub.capitalizeString(commit_message);
 		}
 

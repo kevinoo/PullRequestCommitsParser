@@ -7,14 +7,20 @@ const ScriptGitHubOptions = {
 		$target.append(row_html);
 	},
 
-	'removePullRequestTitleTableRow': function( event ){
+	'addPullRequestGroupTableRow': function(){
+		let $target = $('#pull_request_groups_table > tbody');
+		let row_html = $('[data-template="pull_request_group_row"]').html().replace(/%INDEX%/g, $target.find('tr').length );
+		$target.append(row_html);
+	},
+
+	'removeTableRow': function( event ){
 		if( !confirm('Are you sure to remove this row?') ){
 			return;
 		}
 		$(event.target).closest('tr').remove();
-
-
 	},
+
+
 
 	'restoreOptions': function(){
 
@@ -28,15 +34,12 @@ const ScriptGitHubOptions = {
 
 			settings.prefix_to_ignore = settings.prefix_to_ignore.join('\n');
 
-			let length = 0;
-			for(let i in settings.pull_request_title){
-				console.dir(settings.pull_request_title[i]);
-				if( settings.pull_request_title[i]['from'] !== '' ){
-					length++;
-				}
-			}
-			for(let i=0; i<=length; i++ ){
+			for(let i=0; i<=Object.keys(settings.pull_request_title).length; i++ ){
 				ScriptGitHubOptions.addPullRequestTitleTableRow();
+			}
+
+			for(let i=0; i<=Object.keys(settings.pull_request_groups).length; i++ ){
+				ScriptGitHubOptions.addPullRequestGroupTableRow();
 			}
 
 			$('body').setDataInfo(settings);
@@ -60,13 +63,26 @@ const ScriptGitHubOptions = {
 		}
 
 		let settings = $('body').getDataInfo();
+		delete(settings.pull_request_title['%INDEX%']);
+		delete(settings.pull_request_groups['%INDEX%']);
 
 		settings.prefix_to_ignore = settings.prefix_to_ignore.split('\n');
+
+		console.dir(settings);
+
+		let keys = Object.keys(settings.pull_request_groups);
+		console.log('keys',keys);
+		for(let i=0; i<keys.length; i++ ){
+			if( (settings.pull_request_groups[keys[i]]).group_name.trim() === '' ){
+				delete(settings.pull_request_groups[keys[i]]);
+				continue;
+			}
+			settings.pull_request_groups[keys[i]].words = (settings.pull_request_groups[keys[i]]).words.split(',');
+		}
 
 		browser.storage.sync.set({
 			'settings': JSON.stringify(settings)
 		});
-
 	}
 
 };
@@ -74,5 +90,8 @@ const ScriptGitHubOptions = {
 
 document.addEventListener('DOMContentLoaded', ScriptGitHubOptions.restoreOptions );
 $(document).on('click','#btn_save',ScriptGitHubOptions.save);
-$(document).on('click','#btn_add_pr_table_row',ScriptGitHubOptions.addPullRequestTitleTableRow);
-$(document).on('click','.btn_remove_row',ScriptGitHubOptions.removePullRequestTitleTableRow);
+$(document).on('click','#btn_add_pr_title_table_row',ScriptGitHubOptions.addPullRequestTitleTableRow);
+$(document).on('click','#btn_add_pr_group_table_row',ScriptGitHubOptions.addPullRequestGroupTableRow);
+
+// Generic use, remove a row by a table
+$(document).on('click','.btn_remove_row',ScriptGitHubOptions.removeTableRow);
